@@ -1,4 +1,4 @@
-# HTTP Hangman Kata
+# Hangman HTTP Kata
 Out there there's a server that allows you to play hangman over HTTP, you need to write a client that can play the game
 
 # Goals
