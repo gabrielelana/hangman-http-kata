@@ -75,3 +75,7 @@ http://balanced-hangman.herokuapp.com/prisoners> body
 }
 ```
 Seems like some kind of pagination metadata, `/prisoners` (like the plural would suggest) is a collection, we don't know if we can post on it but we will try soon
+
+
+# Final Considerations
+* I don't like the `null` as an `application/json` representation of the resource `/me` when you are not logged in...
