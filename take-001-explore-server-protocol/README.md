@@ -192,8 +192,89 @@ Authorization:@ Basic bWVAZXhhbXBsZS5jb206aGFuZ21hbg==
 We are sending an `Authorization` header, now, let's look around with those valid credentials
 
 
+# Step-06
+```
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners> path /users
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/users> get
+ 404  Not Found -- 5 headers -- 202-character body
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/users> body
+{
+ "status": "Not Found",
+ "status_code": 404,
+ "description": "<p>The requested URL was not found on the server.</p><p>If you entered the URL manually please check your spelling and try again.</p>"
+}
+```
+Mmm, ok, `users` doesn't exists, I don't like it but let's move on
+```
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/users> path /prisoners
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners> get
+ 200  OK -- 5 headers -- 186-character body
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners> body
+{
+ "items": [],
+ "offset": 0,
+ "first": "/prisoners?offset=0",
+ "next": null,
+ "limit": 10,
+ "total": 0,
+ "last": "/prisoners?offset=0",
+ "uri": "/prisoners",
+ "previous": null
+}
+```
+`/prisoners` is unchanged with valid credentials, let's try to post on it
+```
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners> post
+*** Type fol[low] to follow the 'Location' header received in the response
+ 201  Created -- 6 headers -- 327-character body
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners> body
+{
+ "word": "*************",
+ "misses": [],
+ "guesses_remaining": 20,
+ "guesses": "/prisoners/5guXaUAUQY8=/guesses",
+ "user": "/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=",
+ "hits": [],
+ "id": "5guXaUAUQY8=",
+ "state": "help",
+ "uri": "/prisoners/5guXaUAUQY8=",
+ "imprisoned_at": "2014-02-12T14:19:26.244308Z"
+}
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners> get
+ 200  OK -- 5 headers -- 540-character body
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners> body
+{
+ "items": [
+  {
+   "word": "*************",
+   "misses": [],
+   "guesses_remaining": 20,
+   "guesses": "/prisoners/5guXaUAUQY8=/guesses",
+   "user": "/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=",
+   "hits": [],
+   "id": "5guXaUAUQY8=",
+   "state": "help",
+   "uri": "/prisoners/5guXaUAUQY8=",
+   "imprisoned_at": "2014-02-12T14:19:26.244308Z"
+  }
+ ],
+ "offset": 0,
+ "first": "/prisoners?offset=0",
+ "next": null,
+ "limit": 10,
+ "total": 1,
+ "last": "/prisoners?offset=0",
+ "uri": "/prisoners",
+ "previous": null
+}
+```
+Cool! We created a new prisoner resource aka a new game, I only need to find out how to play
+
+
 # Final Considerations
 * I don't like the `null` as an `application/json` representation of the resource `/me` when you are not logged in, ...
 * I don't like that `OPTION` method is not implemented on `/prisoners` resource, ...
 * I don't like that links are relative in the resources representation, ...
 * I don't like the `403 Forbidden`, ...
+* I don't like that `/users` doesn't exists when `/users/:id` exists
+* Is prisoner part of the ubiquitous language of the hangman game domain? I really don't know but I didn't found it too easy to understand but I'm not a native speaker so I guess it's ok
