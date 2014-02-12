@@ -320,6 +320,122 @@ http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUA
 I missed, `e` is not in the word we have to guess to free the current prisoner, but it's not this that bothers me... Why on earth a `201 Created` response with a `Location` of an already created resource aka the current prisoner? Never mind, I want to win this game
 
 
+# Step-08
+After some time...
+```
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=/guesses> body-set
+*** Enter two blank lines, or hit Ctrl-D, to signify the end of the body
+guess=l
+
+
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=/guesses> post
+*** Type fol[low] to follow the 'Location' header received in the response
+ 201  Created -- 6 headers -- 407-character body
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=/guesses> body
+{
+ "word": "*o*o*ra*hi*al",
+ "misses": [
+  "e",
+  "t",
+  "n",
+  "s"
+ ],
+ "guesses_remaining": 10,
+ "guesses": "/prisoners/5guXaUAUQY8=/guesses",
+ "user": "/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=",
+ "hits": [
+  "a",
+  "o",
+  "i",
+  "h",
+  "r",
+  "l"
+ ],
+ "id": "5guXaUAUQY8=",
+ "state": "help",
+ "uri": "/prisoners/5guXaUAUQY8=",
+ "imprisoned_at": "2014-02-12T14:19:26.244308Z"
+}
+```
+I think that the word could be *doxographical*, can I guess the entire word?
+```
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=/guesses> body-set
+*** Enter two blank lines, or hit Ctrl-D, to signify the end of the body
+guess=doxographical
+
+
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=/guesses> post
+ 400  Bad Request -- 5 headers -- 134-character body
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=/guesses> body
+{
+ "status": "Bad Request",
+ "status_code": 400,
+ "description": "Invalid field [guess] - \"doxographical\" must have length <= 1"
+}
+```
+Nope... one characted at time, and... in the end...
+```
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=/guesses> body-set
+*** Enter two blank lines, or hit Ctrl-D, to signify the end of the body
+guess=c
+
+
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=/guesses> post
+*** Type fol[low] to follow the 'Location' header received in the response
+ 201  Created -- 6 headers -- 449-character body
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=/guesses> body
+{
+ "word": "doxographical",
+ "misses": [
+  "e",
+  "t",
+  "n",
+  "s"
+ ],
+ "guesses_remaining": 5,
+ "guesses": "/prisoners/5guXaUAUQY8=/guesses",
+ "user": "/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=",
+ "hits": [
+  "a",
+  "o",
+  "i",
+  "h",
+  "r",
+  "l",
+  "d",
+  "x",
+  "g",
+  "p",
+  "c"
+ ],
+ "id": "5guXaUAUQY8=",
+ "state": "rescued",
+ "uri": "/prisoners/5guXaUAUQY8=",
+ "imprisoned_at": "2014-02-12T14:19:26.244308Z"
+}
+```
+Yes!!! The prisoner is rescued! Let's look at our stats
+```
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=/guesses> path /users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=> get
+ 200  OK -- 5 headers -- 341-character body
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=> body
+{
+ "id": "jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=",
+ "prisoners": "/prisoners",
+ "uri": "/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=",
+ "email_address": "me@example.com",
+ "stats": {
+  "started_at": "2014-02-12T14:19:26.244308Z",
+  "dead": 0,
+  "help": 0,
+  "rescued": 1,
+  "ended_at": "2014-02-12T14:19:26.244308Z"
+ }
+}
+```
+Ok, mission accomplished, no more secrets in this server!
+
 
 # Considerations
 * I don't like the `null` as an `application/json` representation of the resource `/me` when you are not logged in, ...
