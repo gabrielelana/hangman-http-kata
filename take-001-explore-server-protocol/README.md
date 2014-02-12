@@ -44,3 +44,34 @@ Content-Length: 4
     Connection: keep-alive
 ```
 Wow, null? looking at the `Content-Type` not sure if it's a valid `application/json` I must remember it, I guess the json parse will not be happy... Anyway, nothing here, maybe because we are not logged in, but let's look at `/prisoners` before to create side effects
+
+# Step-03
+```
+http://balanced-hangman.herokuapp.com/me> path /prisoners
+http://balanced-hangman.herokuapp.com/prisoners> http-options
+ 405  Method Not Allowed -- 5 headers -- empty body
+http://balanced-hangman.herokuapp.com/prisoners> headers
+  Content-Type: application/json
+          Date: Wed, 12 Feb 2014 13:28:03 GMT
+        Server: gunicorn/18.0
+Content-Length: 80
+    Connection: keep-alive
+```
+Too bad, `405 Method Not Allowed` I wonder why... let's try to `get` it anyway
+```
+http://balanced-hangman.herokuapp.com/prisoners> get
+ 200  OK -- 5 headers -- 186-character body
+http://balanced-hangman.herokuapp.com/prisoners> body
+{
+ "items": [],
+ "offset": 0,
+ "first": "/prisoners?offset=0",
+ "next": null,
+ "limit": 10,
+ "total": 0,
+ "last": "/prisoners?offset=0",
+ "uri": "/prisoners",
+ "previous": null
+}
+```
+Seems like some kind of pagination metadata, `/prisoners` (like the plural would suggest) is a collection, we don't know if we can post on it but we will try soon
