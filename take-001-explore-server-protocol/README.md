@@ -144,8 +144,56 @@ Content-Length: 291
 Success! We are in! I think...
 
 
+# Step-05
+```
+http://balanced-hangman.herokuapp.com/me> get
+ 200  OK -- 5 headers -- 4-character body
+http://balanced-hangman.herokuapp.com/me> body
+null
+```
+`GET /me` is still null... this is not useful at all, maybe `GET /me` should return a `405 Method Not Allowed`? And so `OPTION /me` must not include it?
+```
+http://balanced-hangman.herokuapp.com/me> path /users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=
+http://balanced-hangman.herokuapp.com/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=> get
+ 403  Forbidden -- 5 headers -- 198-character body
+http://balanced-hangman.herokuapp.com/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=> body
+{
+ "status": "Forbidden",
+ "status_code": 403,
+ "description": "<p>You don't have the permission to access the requested resource. It is either read-protected or not readable by the server.</p>"
+}
+```
+`403 Forbidden` sound strange, but I get it, `/me` is used to create an user resource with username and password, to access this resource you need to provide those username and password
+```
+http://balanced-hangman.herokuapp.com/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=> userinfo-set me@example.com hangman
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=> get
+ 200  OK -- 5 headers -- 291-character body
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=> body
+{
+ "id": "jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=",
+ "prisoners": "/prisoners",
+ "uri": "/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=",
+ "email_address": "me@example.com",
+ "stats": {
+  "started_at": null,
+  "dead": 0,
+  "help": 0,
+  "rescued": 0,
+  "ended_at": null
+ }
+}
+```
+Yes! We are really in! What I have done here is to provide username and password for a Basic Authorization, look at it
+```
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=> headers-request
+    User-Agent: htty/1.4.1
+Authorization:@ Basic bWVAZXhhbXBsZS5jb206aGFuZ21hbg==
+```
+We are sending an `Authorization` header, now, let's look around with those valid credentials
+
 
 # Final Considerations
-* I don't like the `null` as an `application/json` representation of the resource `/me` when you are not logged in
-* I don't like that `OPTION` method is not implemented on `/prisoners` resource
-* I don't like that links are relative in the resources representation
+* I don't like the `null` as an `application/json` representation of the resource `/me` when you are not logged in, ...
+* I don't like that `OPTION` method is not implemented on `/prisoners` resource, ...
+* I don't like that links are relative in the resources representation, ...
+* I don't like the `403 Forbidden`, ...
