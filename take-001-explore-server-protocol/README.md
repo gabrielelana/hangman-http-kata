@@ -271,10 +271,62 @@ http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners> body
 Cool! We created a new prisoner resource aka a new game, I only need to find out how to play
 
 
-# Final Considerations
+# Step-07
+Without further ado, let's be bold
+```
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners> path /prisoners/5guXaUAUQY8=/guesses
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=/guesses> post
+ 400  Bad Request -- 5 headers -- 101-character body
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=/guesses> body
+{
+ "status": "Bad Request",
+ "status_code": 400,
+ "description": "Missing required field [guess]"
+}
+```
+A field guess it's needed, I'll try giving a single character
+```
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=/guesses> body-set
+*** Enter two blank lines, or hit Ctrl-D, to signify the end of the body
+guess=e
+
+
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=/guesses> post
+*** Type fol[low] to follow the 'Location' header received in the response
+ 201  Created -- 6 headers -- 335-character body
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=/guesses> headers
+  Content-Type: application/json
+          Date: Wed, 12 Feb 2014 14:46:44 GMT
+      Location: http://balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=
+        Server: gunicorn/18.0
+Content-Length: 335
+    Connection: keep-alive
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=/guesses> body
+{
+ "word": "*************",
+ "misses": [
+  "e"
+ ],
+ "guesses_remaining": 19,
+ "guesses": "/prisoners/5guXaUAUQY8=/guesses",
+ "user": "/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=",
+ "hits": [],
+ "id": "5guXaUAUQY8=",
+ "state": "help",
+ "uri": "/prisoners/5guXaUAUQY8=",
+ "imprisoned_at": "2014-02-12T14:19:26.244308Z"
+}
+```
+I missed, `e` is not in the word we have to guess to free the current prisoner, but it's not this that bothers me... Why on earth a `201 Created` response with a `Location` of an already created resource aka the current prisoner? Never mind, I want to win this game
+
+
+
+# Considerations
 * I don't like the `null` as an `application/json` representation of the resource `/me` when you are not logged in, ...
 * I don't like that `OPTION` method is not implemented on `/prisoners` resource, ...
 * I don't like that links are relative in the resources representation, ...
 * I don't like the `403 Forbidden`, ...
-* I don't like that `/users` doesn't exists when `/users/:id` exists
-* Is prisoner part of the ubiquitous language of the hangman game domain? I really don't know but I didn't found it too easy to understand but I'm not a native speaker so I guess it's ok
+* I don't like that `/users` doesn't exists when `/users/:id` exists, ...
+* Is prisoner part of the ubiquitous language of the hangman game domain? I really don't know but I didn't found it too easy to understand but I'm not a native speaker so I guess it's ok, ...
+* What happens if we, the agent, don't support `application/json` as a content type?
+* I don't like that `POST /prisoners/:id/guesses` return `201 Created` of an already created resource, ...
