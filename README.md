@@ -31,11 +31,8 @@ NOTE: in the near future I will implement a clone of the original server
 * how do you explore the server API? What tools are you gonna to use?
 * create an usable and pretty command line application
 
-# Resources
-* ... TODO
-
 # Credits
-Originally used as an exercise to evaluate candidates for a job and published as a [gist](https://gist.github.com/mjallday/6891926), I tought that this would have been a wonderful kata and there it is :smile:
+Originally used as an exercise to evaluate candidates for a job and published as a [gist](https://gist.github.com/mjallday/6891926), I tought that this would have been a wonderful kata and there it is
 
-# What is a Kata?
-... TODO
+# What is a Code Kata?
+Code Kata is a term coined by Dave Thomas, co-author of the book The Pragmatic Programmer, in a bow to the Japanese concept of kata in the martial arts. A code kata is an exercise in programming which helps a programmer hone their skills through practice and repetition (excerpt from [wikipedia](http://en.wikipedia.org/wiki/Kata_(programming)))
