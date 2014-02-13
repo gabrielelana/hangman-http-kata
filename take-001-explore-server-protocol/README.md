@@ -437,7 +437,61 @@ http://me%40example.com:hangman@balanced-hangman.herokuapp.com/users/jCpH07240wl
 Ok, mission accomplished, no more secrets in this server!
 
 
-# Considerations
+# Play Around
+Now I'll try to break things...
+```
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=> path /prisoners/5guXaUAUQY8
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=> http-delete
+ 405  Method Not Allowed -- 5 headers -- 80-character body
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=> body
+{
+ "status": "Method Not Allowed",
+ "status_code": 405,
+ "description": null
+}
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=> path /users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=
+ttp://me%40example.com:hangman@balanced-hangman.herokuapp.com/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=> http-delete
+ 405  Method Not Allowed -- 5 headers -- 80-character body
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=> body
+{
+ "description": null,
+ "status_code": 405,
+ "status": "Method Not Allowed"
+}
+```
+Ok, prisoners and users could not be deleted, that's fair. What if I try to guess for an ended game?
+```
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=/guesses> body-set
+*** Enter two blank lines, or hit Ctrl-D, to signify the end of the body
+guess=Z
+
+
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=/guesses> post
+ 500  Internal Server Error -- 5 headers -- 131-character body
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=/guesses> body
+{
+ "status": "Internal Server Error",
+ "status_code": 500,
+ "description": "Prisoner \"5guXaUAUQY8=\" is already rescued silly"
+}
+```
+Woooooo, `500 Internal Server Error`, that's extreme! But I like the error message. What about trying to create a new game without user credentials?
+```
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=> userinfo-clear
+http://balanced-hangman.herokuapp.com/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=> path /prisoners
+http://balanced-hangman.herokuapp.com/prisoners> post
+ 403  Forbidden -- 5 headers -- 198-character body
+http://balanced-hangman.herokuapp.com/prisoners> body
+{
+ "description": "<p>You don't have the permission to access the requested resource. It is either read-protected or not readable by the server.</p>",
+ "status_code": 403,
+ "status": "Forbidden"
+}
+```
+Ok, same `403 Forbidden`, I still don't like it. I guess that's all for now
+
+
+# Considerations And Improvements
 * I don't like the `null` as an `application/json` representation of the resource `/me` when you are not logged in, ...
 * I don't like that `OPTION` method is not implemented on `/prisoners` resource, ...
 * I don't like that links are relative in the resources representation, ...
@@ -446,3 +500,5 @@ Ok, mission accomplished, no more secrets in this server!
 * Is prisoner part of the ubiquitous language of the hangman game domain? I really don't know but I didn't found it too easy to understand but I'm not a native speaker so I guess it's ok, ...
 * What happens if we, the agent, don't support `application/json` as a content type?
 * I don't like that `POST /prisoners/:id/guesses` return `201 Created` of an already created resource, ...
+* I don't like the `500 Internal Sever Error`
+* I don't like to repeat the status and the status code in the response body
