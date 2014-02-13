@@ -502,3 +502,7 @@ Ok, same `403 Forbidden`, I still don't like it. I guess that's all for now
 * I don't like that `POST /prisoners/:id/guesses` return `201 Created` of an already created resource, ...
 * I don't like the `500 Internal Sever Error`
 * I don't like to repeat the status and the status code in the response body
+
+
+# Conclusions
+That was fun, the API is well conceived, I have some concerns but that's ok. HTTY really impressed me, it's the kind of tool that I love but seems like a little neglected (the last commit was 9 months ago) so I decided to contribute to it. Next step: build an OO wrapper in Ruby that works
