@@ -190,6 +190,27 @@ http://me%40example.com:hangman@balanced-hangman.herokuapp.com/users/jCpH07240wl
 Authorization:@ Basic bWVAZXhhbXBsZS5jb206aGFuZ21hbg==
 ```
 We are sending an `Authorization` header, now, let's look around with those valid credentials
+```
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=> path /me
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/me> get
+*** The body of your GET request is not being sent
+ 200  OK -- 5 headers -- 341-character body
+http://me%40example.com:hangman@balanced-hangman.herokuapp.com/me> body
+{
+ "prisoners": "/prisoners",
+ "id": "jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=",
+ "email_address": "me@example.com",
+ "uri": "/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=",
+ "stats": {
+  "started_at": null,
+  "dead": 0,
+  "help": 0,
+  "rescued": 0,
+  "ended_at": null
+ }
+}
+```
+I get it, `/me` with valid user credentials is an alias of the user's resource
 
 
 # Step-06
@@ -492,7 +513,10 @@ Ok, same `403 Forbidden`, I still don't like it. I guess that's all for now
 
 
 # Considerations And Improvements
-* I don't like the `null` as an `application/json` representation of the resource `/me` when you are not logged in, ...
+* I don't like the `null` as an `application/json` representation of the resource `/me` when you don't provide valid user credentials
+  * Improvement: `GEt /me` could return `401 Unauthorized`
+  * Improvement: `GET /me` could redirect to `/users/unknown` with an explanation of what you have to do to identify yourself or to create a new user
+  * Improvement: `GET /me` must return `405 Method Not Allowed` since `/me` is only used to create new users with a `POST`
 * I don't like that `OPTION` method is not implemented on `/prisoners` resource, ...
 * I don't like that links are relative in the resources representation, ...
 * I don't like the `403 Forbidden`, ...
