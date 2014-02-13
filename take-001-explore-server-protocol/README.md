@@ -517,15 +517,26 @@ Ok, same `403 Forbidden`, I still don't like it. I guess that's all for now
   * Improvement: `GEt /me` could return `401 Unauthorized`
   * Improvement: `GET /me` could redirect to `/users/unknown` with an explanation of what you have to do to identify yourself or to create a new user
   * Improvement: `GET /me` must return `405 Method Not Allowed` since `/me` is only used to create new users with a `POST`
-* I don't like that `OPTION` method is not implemented on `/prisoners` resource, ...
-* I don't like that links are relative in the resources representation, ...
-* I don't like the `403 Forbidden`, ...
-* I don't like that `/users` doesn't exists when `/users/:id` exists, ...
+* I don't like that the `OPTION` method is not implemented on `/prisoners` resource
+  * Improvement: must be implemented on every resource
+* I don't like that links are relative in the resources representation
+  * Improvement: links in JSON could be better represented, see [this article](http://www.mnot.net/blog/2011/11/25/linking_in_json)
+* I don't like the `403 Forbidden`, here is the explanation for this result code _"The server understood the request, but is refusing to fulfill it. Authorization will not help and the request SHOULD NOT be repeated"_ this is clearly not the case
+  * Improvement: use `401 Unauthorized`
+* I don't like that `/users` doesn't exists when `/users/:id` exists
+  * Improvement: I think that for some administrator `/users` would be accessible/useful so a `401 Unauthorized` in this case would be better
 * Is prisoner part of the ubiquitous language of the hangman game domain? I really don't know but I didn't found it too easy to understand but I'm not a native speaker so I guess it's ok, ...
-* What happens if we, the agent, don't support `application/json` as a content type?
-* I don't like that `POST /prisoners/:id/guesses` return `201 Created` of an already created resource, ...
-* I don't like the `500 Internal Sever Error`
+* What happens if we, the agent, don't support `application/json` as a content type? I tried, the client `Accept` header is completely ignored
+  * Improvement: if the client doesn't accept `application/json` the response should be `406 Not Acceptable`
+* I don't like that `POST /prisoners/:id/guesses` return `201 Created` of an already created resource
+  * Improvement: simply return `200 OK`
+  * Improvement: return `201 Created` but creating a guess resource like `/prisoners/:prisoner-id/guesses/:guess-id`
+  * Improvement: return `303 See Other` with header `Location: /prisoners/:id` because _"This method exists primarily to allow the output of a POST-activated script to redirect the user agent to a selected resource"_ maybe also with the prisoner representation in the body
+* I don't like the `500 Internal Sever Error` for a guess in an already ended game
+  * Improvement: this is where a `403 Forbidden` will shine! Look above for the `403` definition
 * I don't like to repeat the status and the status code in the response body
+* When you post credentials of an existing user to `/me` you get back a `201 Created` but nothing is really created, the user resource was already there
+  * Improvement: return `302 Found` with header `Location: /users/:id` because _"The requested resource resides temporarily under a different URI"_ that's the case, with those credentials `/me` is temprorary linked to `/users/:id`
 
 
 # Conclusions
