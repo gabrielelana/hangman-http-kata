@@ -1,0 +1,26 @@
+{
+  "name": "take-002-nodejs-server-clone",
+  "version": "0.0.0",
+  "description": "Clone of the original hangman kata server hosted on Heroku",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gabrielelana/hangman-http-kata"
+  },
+  "keywords": [
+    "hangman",
+    "kata"
+  ],
+  "author": "Gabriele Lana <gabriele.lana@gmail.com> (http://github.com/gabrielelana)",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.4.3",
+    "express": "^4.4.5",
+    "lodash": "^2.4.1",
+    "mongoose": "^3.8.12",
+    "morgan": "^1.1.1"
+  }
+}
