@@ -45,7 +45,7 @@ http://balanced-hangman.herokuapp.com/me> headers
 Content-Length: 4
     Connection: keep-alive
 ```
-Wow, null? looking at the `Content-Type` not sure if it's a valid `application/json` I must remember it, I guess the json parse will not be happy... Anyway, nothing here, maybe because we are not logged in, but let's look at `/prisoners` before to create side effects
+Wow, null? Looking at the `Content-Type` not sure if it's a valid `application/json` I must remember it, I guess the json parse will not be happy... Anyway, nothing here, maybe because we are not logged in, but let's look at `/prisoners` before to create side effects
 
 
 # Step-03
@@ -60,7 +60,7 @@ http://balanced-hangman.herokuapp.com/prisoners> headers
 Content-Length: 80
     Connection: keep-alive
 ```
-Too bad, `405 Method Not Allowed` I wonder why... let's try to `get` it anyway
+Too bad, `405 Method Not Allowed` I wonder why… let's try to `get` it anyway
 ```
 http://balanced-hangman.herokuapp.com/prisoners> get
  200  OK -- 5 headers -- 186-character body
@@ -109,7 +109,7 @@ http://balanced-hangman.herokuapp.com/me> body
  "description": "Missing required field [password]"
 }
 ```
-Nice! a password is also required, seems reasonable, let's do it
+Nice! A password is also required, seems reasonable, let's do it
 ```
 http://balanced-hangman.herokuapp.com/me> body-set
 *** Enter two blank lines, or hit Ctrl-D, to signify the end of the body
@@ -141,7 +141,7 @@ http://balanced-hangman.herokuapp.com/me> headers
 Content-Length: 291
     Connection: keep-alive
 ```
-Success! We are in! I think...
+Success! We are in! I think…
 
 
 # Step-05
@@ -151,7 +151,7 @@ http://balanced-hangman.herokuapp.com/me> get
 http://balanced-hangman.herokuapp.com/me> body
 null
 ```
-`GET /me` is still null... this is not useful at all, maybe `GET /me` should return a `405 Method Not Allowed`? And so `OPTION /me` must not include it?
+`GET /me` is still null… this is not useful at all, maybe `GET /me` should return a `405 Method Not Allowed`? And so `OPTION /me` must not include it?
 ```
 http://balanced-hangman.herokuapp.com/me> path /users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=
 http://balanced-hangman.herokuapp.com/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=> get
@@ -394,7 +394,7 @@ http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUA
  "description": "Invalid field [guess] - \"doxographical\" must have length <= 1"
 }
 ```
-Nope... one characted at time, and... in the end...
+Nope… one character at time, and… in the end…
 ```
 http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=/guesses> body-set
 *** Enter two blank lines, or hit Ctrl-D, to signify the end of the body
@@ -459,7 +459,7 @@ Ok, mission accomplished, no more secrets in this server!
 
 
 # Play Around
-Now I'll try to break things...
+Now I'll try to break things…
 ```
 http://me%40example.com:hangman@balanced-hangman.herokuapp.com/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=> path /prisoners/5guXaUAUQY8
 http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUAUQY8=> http-delete
@@ -496,7 +496,7 @@ http://me%40example.com:hangman@balanced-hangman.herokuapp.com/prisoners/5guXaUA
  "description": "Prisoner \"5guXaUAUQY8=\" is already rescued silly"
 }
 ```
-Woooooo, `500 Internal Server Error`, that's extreme! But I like the error message. What about trying to create a new game without user credentials?
+Wow, `500 Internal Server Error`, that's extreme! But I like the error message. What about trying to create a new game without user credentials?
 ```
 http://me%40example.com:hangman@balanced-hangman.herokuapp.com/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=> userinfo-clear
 http://balanced-hangman.herokuapp.com/users/jCpH07240wlqZHn1Pqw7ckKR218cMWERAPZ1vlU3Mp0=> path /prisoners
@@ -536,7 +536,7 @@ Ok, same `403 Forbidden`, I still don't like it. I guess that's all for now
   * Improvement: this is where a `403 Forbidden` will shine! Look above for the `403` definition
 * I don't like to repeat the status and the status code in the response body
 * When you post credentials of an existing user to `/me` you get back a `201 Created` but nothing is really created, the user resource was already there
-  * Improvement: return `302 Found` with header `Location: /users/:id` because _"The requested resource resides temporarily under a different URI"_ that's the case, with those credentials `/me` is temprorary linked to `/users/:id`
+  * Improvement: return `302 Found` with header `Location: /users/:id` because _"The requested resource resides temporarily under a different URI"_ that's the case, with those credentials `/me` is temporary linked to `/users/:id`
 
 
 # Conclusions
